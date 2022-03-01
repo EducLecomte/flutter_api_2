@@ -102,7 +102,7 @@ class _MyHomePageState extends State<MyHomePage> {
             });
           },
         ),
-        const Padding(padding: EdgeInsets.only(top: 50)),
+        const Padding(padding: EdgeInsets.only(top: 20)),
         recupDataBool ? afficheData() : attente(),
       ]),
     );
