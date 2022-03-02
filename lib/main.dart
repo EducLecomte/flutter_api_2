@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 
@@ -34,7 +35,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   Map<String, dynamic> dataMap = new Map();
   bool recupDataBool = false;
-  int id = 0;
+  String id = "0";
 
   void recupData() async {
     await recupDataJson();
@@ -46,7 +47,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> recupDataJson() async {
-    String url = "https://pokeapi.co/api/v2/pokemon/" + this.id.toString();
+    String url = "https://pokeapi.co/api/v2/pokemon/" + this.id;
     var reponse = await http.get(Uri.parse(url));
     if (reponse.statusCode == 200) {
       dataMap = convert.jsonDecode(reponse.body);
@@ -59,16 +60,17 @@ class _MyHomePageState extends State<MyHomePage> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: List.empty(growable: true),
     );
+    if (recupDataBool) {
+      Map<String, dynamic> spritesData = dataMap['sprites'];
+      //contenu.children.add(Image.network(spritesData['front_default'].toString()));
+      contenu.children.add(Image.network(spritesData['other']['official-artwork']['front_default'].toString()));
+      List<dynamic> formsData = dataMap['forms'];
+      contenu.children.add(Text("Name: " + formsData[0]['name'].toString()));
+      contenu.children.add(Text("Height: " + dataMap['height'].toString()));
+      contenu.children.add(Text("Weight: " + dataMap['weight'].toString()));
 
-    List<dynamic> formsData = dataMap['forms'];
-    contenu.children.add(Text("Name: " + formsData[0]['name'].toString()));
-    Map<String, dynamic> spritesData = dataMap['sprites'];
-    contenu.children.add(Image.network(spritesData['front_default'].toString()));
-    contenu.children.add(Text("Height: " + dataMap['height'].toString()));
-    contenu.children.add(Text("Weight: " + dataMap['weight'].toString()));
-
-    recupDataBool = false;
-
+      recupDataBool = false;
+    }
     return contenu;
   }
 
@@ -77,7 +79,7 @@ class _MyHomePageState extends State<MyHomePage> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: const <Widget>[
         Text('En attente des données', style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),
-        CircularProgressIndicator(),
+        //CircularProgressIndicator(),
       ],
     );
   }
@@ -93,11 +95,15 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
         TextField(
-          decoration: const InputDecoration(labelText: "Id", hintText: "Saisir l'id d'un Pokémon"),
+          decoration: const InputDecoration(labelText: "N° du Pokémon", hintText: "Saisir l'id d'un Pokémon (Gen1)"),
+          inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9]')), LengthLimitingTextInputFormatter(3)],
           onSubmitted: (value) {
             setState(() {
-              if (value.contains(RegExp(r'[0-9]'))) {
-                this.id = int.parse(value);
+              if (value != null && value.isNotEmpty && value != "" && value.compareTo("151") <= 0) {
+                id = value;
+              } else {
+                id = "0";
+                recupDataBool = false;
               }
             });
           },
