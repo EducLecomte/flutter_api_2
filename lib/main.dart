@@ -35,7 +35,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   Map<String, dynamic> dataMap = new Map();
   bool recupDataBool = false;
-  String id = "0";
+  int id = 0;
 
   void recupData() async {
     await recupDataJson();
@@ -47,7 +47,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> recupDataJson() async {
-    String url = "https://pokeapi.co/api/v2/pokemon/" + this.id;
+    String url = "https://pokeapi.co/api/v2/pokemon/" + this.id.toString();
     var reponse = await http.get(Uri.parse(url));
     if (reponse.statusCode == 200) {
       dataMap = convert.jsonDecode(reponse.body);
@@ -84,6 +84,15 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  bool isNumeric(String s) {
+    bool isnum = false;
+    try {
+      double.parse(s);
+      isnum = true;
+    } catch (e) {}
+    return isnum;
+  }
+
   @override
   Widget build(BuildContext context) {
     if (!recupDataBool) {
@@ -95,14 +104,16 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
         TextField(
-          decoration: const InputDecoration(labelText: "N° du Pokémon", hintText: "Saisir l'id d'un Pokémon (Gen1)"),
+          decoration: const InputDecoration(labelText: "N° du Pokémon", hintText: "Saisir l'id d'un Pokémon"),
           inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9]')), LengthLimitingTextInputFormatter(3)],
           onSubmitted: (value) {
             setState(() {
-              if (value != null && value.isNotEmpty && value != "" && value.compareTo("151") <= 0) {
-                id = value;
+              if (value != null && value.isNotEmpty && value != "") {
+                if (isNumeric(value)) {
+                  id = int.parse(value);
+                }
               } else {
-                id = "0";
+                id = 0;
                 recupDataBool = false;
               }
             });
