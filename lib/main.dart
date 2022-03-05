@@ -62,8 +62,8 @@ class _MyHomePageState extends State<MyHomePage> {
     );
     if (recupDataBool) {
       Map<String, dynamic> spritesData = dataMap['sprites'];
-      //contenu.children.add(Image.network(spritesData['front_default'].toString()));
-      contenu.children.add(Image.network(spritesData['other']['official-artwork']['front_default'].toString()));
+      contenu.children.add(Image.network(spritesData['front_default'].toString()));
+      //contenu.children.add(Image.network(spritesData['other']['official-artwork']['front_default'].toString()));
       List<dynamic> formsData = dataMap['forms'];
       contenu.children.add(Text("Name: " + formsData[0]['name'].toString()));
       contenu.children.add(Text("Height: " + dataMap['height'].toString()));
