@@ -61,14 +61,11 @@ class _MyHomePageState extends State<MyHomePage> {
       children: List.empty(growable: true),
     );
     if (recupDataBool) {
-      Map<String, dynamic> spritesData = dataMap['sprites'];
-      contenu.children.add(Image.network(spritesData['front_default'].toString()));
-      //contenu.children.add(Image.network(spritesData['other']['official-artwork']['front_default'].toString()));
-      List<dynamic> formsData = dataMap['forms'];
-      contenu.children.add(Text("Name: " + formsData[0]['name'].toString()));
+      contenu.children.add(Image.network(dataMap['sprites']['front_default'].toString()));
+      //contenu.children.add(Image.network(dataMap['sprites']['other']['official-artwork']['front_default'].toString()));
+      contenu.children.add(Text("Name: " + dataMap['forms'][0]['name'].toString()));
       contenu.children.add(Text("Height: " + dataMap['height'].toString()));
       contenu.children.add(Text("Weight: " + dataMap['weight'].toString()));
-
       recupDataBool = false;
     }
     return contenu;
