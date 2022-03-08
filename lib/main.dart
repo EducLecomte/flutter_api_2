@@ -101,7 +101,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
         TextField(
-          decoration: const InputDecoration(labelText: "N° du Pokémon", hintText: "Saisir l'id d'un Pokémon"),
+          decoration: const InputDecoration(border: OutlineInputBorder(), labelText: "N° du Pokémon", hintText: "Saisir l'id d'un Pokémon"),
           inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9]')), LengthLimitingTextInputFormatter(3)],
           onSubmitted: (value) {
             setState(() {
