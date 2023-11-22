@@ -47,7 +47,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> recupDataJson() async {
-    String url = "https://pokeapi.co/api/v2/pokemon/" + this.id.toString();
+    String url = "https://pokebuildapi.fr/api/v1/pokemon/" + this.id.toString();
     var reponse = await http.get(Uri.parse(url));
     if (reponse.statusCode == 200) {
       dataMap = convert.jsonDecode(reponse.body);
@@ -61,11 +61,8 @@ class _MyHomePageState extends State<MyHomePage> {
       children: List.empty(growable: true),
     );
     if (recupDataBool) {
-      contenu.children.add(Image.network(dataMap['sprites']['front_default'].toString()));
-      //contenu.children.add(Image.network(dataMap['sprites']['other']['official-artwork']['front_default'].toString()));
-      contenu.children.add(Text("Name: " + dataMap['forms'][0]['name'].toString()));
-      contenu.children.add(Text("Height: " + dataMap['height'].toString()));
-      contenu.children.add(Text("Weight: " + dataMap['weight'].toString()));
+      contenu.children.add(Image.network(dataMap['sprite'].toString()));
+      contenu.children.add(Text("Nom: " + dataMap['name'].toString()));
       recupDataBool = false;
     }
     return contenu;
@@ -101,7 +98,8 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
         TextField(
-          decoration: const InputDecoration(border: OutlineInputBorder(), labelText: "N° du Pokémon", hintText: "Saisir l'id d'un Pokémon"),
+          decoration: const InputDecoration(
+              border: OutlineInputBorder(), labelText: "N° du Pokémon", hintText: "Saisir l'id d'un Pokémon"),
           inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9]')), LengthLimitingTextInputFormatter(3)],
           onSubmitted: (value) {
             setState(() {
